@@ -20,10 +20,10 @@
 #include "rocket.h"
 #include "fireworks.h"
 #include "utils.h"
-
+#include <chrono>
 
 // g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -o fireworks -std=c++17 && kitty ./fireworks
-
+//x86_64-w64-mingw32-g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -static -static-libgcc -static-libstdc++ -o fireworks.exe -std=c++17
 
 void getWindowSize(int& width, int& height, std::vector<std::vector<std::string>>& screen, std::string bg){
     /*
@@ -36,7 +36,7 @@ void getWindowSize(int& width, int& height, std::vector<std::vector<std::string>
     screen = std::vector<std::vector<std::string>>(height, std::vector<std::string>(width, bg));*/
 
 
-    #ifdef _WIN32
+    #ifdef _WIN32 //windows
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
         width = (csbi.srWindow.Right - csbi.srWindow.Left + 1) / 2;
@@ -45,7 +45,7 @@ void getWindowSize(int& width, int& height, std::vector<std::vector<std::string>
         width = 40;
         height = 20;
     }
-    #else
+    #else //linux
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     width = w.ws_col / 2;
@@ -135,13 +135,13 @@ int main() {
     int cooldownDiff = 1000;
 
     std::string skin = "@";
-    std::string trailSkin = "+";
+    std::string trailSkin = "*";
 
 
     float splitSpeed = 0.4 * frameRate;
     std::string splitSkin = "#";
-    std::string splitTrailSkin = ".";
-    int splitTrailLength = 50;
+    std::string splitTrailSkin = "+";
+    int splitTrailLength = 16;
     float splitGravity = 0.04 * frameRate;
     int splitCooldownMS = 1500;
     int splitCooldownDiff = 1000;
@@ -153,8 +153,13 @@ int main() {
     int spawnCooldownDiff = 500;
     int spawnTimer = spawnCooldown;
 
+    using namespace std::chrono;
+    auto previousTime = high_resolution_clock::now();
 
     while (true) {
+        auto nowTime = high_resolution_clock::now();
+        auto loopDuration = std::chrono::duration<float, std::milli> (nowTime - previousTime);
+        previousTime = nowTime;
 
         getWindowSize(width,height,screen, bg);
 
@@ -163,7 +168,7 @@ int main() {
         resetScreen(screen, bg);
         //std::cout << spawnCooldown << " c ";
 
-        spawnTimer += delayInt;
+        spawnTimer += loopDuration.count();
         if(spawnTimer >= spawnCooldown){
             spawnTimer = 0;
             spawnCooldown = randint(spawnCooldown - (float)spawnCooldownDiff / 2, spawnCooldown + (float)spawnCooldownDiff / 2);
