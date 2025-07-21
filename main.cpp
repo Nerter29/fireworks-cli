@@ -23,34 +23,13 @@
 #include <chrono>
 
 // g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -o fireworks -std=c++17 && kitty ./fireworks
-//x86_64-w64-mingw32-g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -static -static-libgcc -static-libstdc++ -o fireworks.exe -std=c++17
+
 
 void getWindowSize(int& width, int& height, std::vector<std::vector<std::string>>& screen, std::string bg){
-    /*
-    struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
-    width = w.ws_col / 2; // because there is spaces beetween points
-    height = w.ws_row - 1;
-
-    screen = std::vector<std::vector<std::string>>(height, std::vector<std::string>(width, bg));*/
-
-
-    #ifdef _WIN32 //windows
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
-        width = (csbi.srWindow.Right - csbi.srWindow.Left + 1) / 2;
-        height = (csbi.srWindow.Bottom - csbi.srWindow.Top + 1) - 1;
-    } else {
-        width = 40;
-        height = 20;
-    }
-    #else //linux
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     width = w.ws_col / 2;
     height = w.ws_row - 1;
-    #endif
 
     screen = std::vector<std::vector<std::string>>(height, std::vector<std::string>(width, bg));
 
