@@ -21,9 +21,11 @@
 #include "fireworks.h"
 #include "utils.h"
 #include <chrono>
-
-// g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -o fireworks -std=c++17 && kitty ./fireworks
-
+/*
+cd 0-documents/0-perso/0-projets-executables/cpp/fireworks
+g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -o fireworks -std=c++17 && ./fireworks
+*/
+//x86_64-w64-mingw32-g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -static -static-libgcc -static-libstdc++ -o fireworks.exe -std=c++17
 
 void getWindowSize(int& width, int& height, std::vector<std::vector<std::string>>& screen, std::string bg){
     struct winsize w;
@@ -128,29 +130,32 @@ int main() {
     float doubleSplitChance = 0.05;
 
 
-    int spawnCooldown = 1250;
-    int spawnCooldownDiff = 500;
-    int spawnTimer = spawnCooldown;
+    int baseSpawnCooldown = 1250;
+    int spawnCooldown = baseSpawnCooldown;
+    int spawnCooldownDiff = 250;
+    int spawnTimer = baseSpawnCooldown;
 
     using namespace std::chrono;
     auto previousTime = high_resolution_clock::now();
-
+    auto nowTime = high_resolution_clock::now();
+    std::chrono::duration<float, std::milli>  remaining = 50ms;
     while (true) {
-        auto nowTime = high_resolution_clock::now();
-        auto loopDuration = std::chrono::duration<float, std::milli> (nowTime - previousTime);
+        //make a realistic state of how much time has elapsed since last time to correctrly add it to spawnTimer
+        nowTime = high_resolution_clock::now();
+        float elapsedTime = std::chrono::duration<float, std::milli> (nowTime - previousTime).count();
         previousTime = nowTime;
+
+        std::cout << "\033[H\033[J";  // clear
+        std::cout << static_cast<int>(remaining.count()) << " " << elapsedTime<< "    ";
 
         getWindowSize(width,height,screen, bg);
 
-        std::cout << "\033[H\033[J";  // clear
-
         resetScreen(screen, bg);
-        //std::cout << spawnCooldown << " c ";
 
-        spawnTimer += loopDuration.count();
+        spawnTimer += elapsedTime;
         if(spawnTimer >= spawnCooldown){
             spawnTimer = 0;
-            spawnCooldown = randint(spawnCooldown - (float)spawnCooldownDiff / 2, spawnCooldown + (float)spawnCooldownDiff / 2);
+            spawnCooldown = randint(baseSpawnCooldown - spawnCooldownDiff, baseSpawnCooldown + spawnCooldownDiff);
             spawnFirework(rockets,width, height, speed, startH, endH,hDiff, s, v, skin, trailSkin ,trailLength, gravity, cooldownMS,
             cooldownDiff);
         }
@@ -161,7 +166,12 @@ int main() {
 
         displayScreen(screen);
 
-        std::this_thread::sleep_for(delay);
+        //see the time that all the shit above took to substract it from the current delay so we always wait the right amount of time beetween every frames
+        float executionTime = std::chrono::duration<float, std::milli> (high_resolution_clock::now() - previousTime).count();
+        remaining = delay - milliseconds((int)executionTime);
+        if (remaining > milliseconds(0))
+            std::this_thread::sleep_for(remaining);
+        
     }
 
     return 0;
