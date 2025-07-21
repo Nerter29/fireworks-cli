@@ -1,10 +1,20 @@
 //#include <algorithm>
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/ioctl.h>
+#include <unistd.h>
+#endif
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #include <cmath>
 #include <iostream>
 #include <vector>
 #include <thread>
-#include <sys/ioctl.h>
-#include <unistd.h>
 #include <string>
 #include <algorithm>
 #include "rocket.h"
@@ -16,13 +26,34 @@
 
 
 void getWindowSize(int& width, int& height, std::vector<std::vector<std::string>>& screen, std::string bg){
+    /*
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
     width = w.ws_col / 2; // because there is spaces beetween points
     height = w.ws_row - 1;
 
+    screen = std::vector<std::vector<std::string>>(height, std::vector<std::string>(width, bg));*/
+
+
+    #ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
+        width = (csbi.srWindow.Right - csbi.srWindow.Left + 1) / 2;
+        height = (csbi.srWindow.Bottom - csbi.srWindow.Top + 1) - 1;
+    } else {
+        width = 40;
+        height = 20;
+    }
+    #else
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    width = w.ws_col / 2;
+    height = w.ws_row - 1;
+    #endif
+
     screen = std::vector<std::vector<std::string>>(height, std::vector<std::string>(width, bg));
+
 }
 
 void resetScreen(std::vector<std::vector<std::string>>& screen, std::string bg) {
@@ -46,7 +77,7 @@ void spawnFirework(std::vector<Rocket>& rockets,int width, int height, float spe
 
     int x = randint((float)width * 2/5, (float)width * 3/5);
     int y = randint((float)height * 0.75, height);
-
+    
     float baseRatio = (float)17/8;
     float screenRatio = (float)width / height ;
     float angleDiffMultiplier = M_PI / 8;
@@ -118,7 +149,7 @@ int main() {
     float doubleSplitChance = 0.05;
 
 
-    int spawnCooldown = 10000;
+    int spawnCooldown = 1250;
     int spawnCooldownDiff = 500;
     int spawnTimer = spawnCooldown;
 
@@ -127,7 +158,7 @@ int main() {
 
         getWindowSize(width,height,screen, bg);
 
-        //std::cout << "\033[H\033[J";  // clear
+        std::cout << "\033[H\033[J";  // clear
 
         resetScreen(screen, bg);
         //std::cout << spawnCooldown << " c ";
