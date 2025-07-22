@@ -2,15 +2,14 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-
 #include "rocket.h"
 #include <cmath>
-#include <iostream>
 //#include <iostream>
 #include "utils.h"
 #include "fireworks.h"
 
-//constructor
+//Rocket Class
+
 Rocket::Rocket(float x, float y, float vx, float vy, float speed, float h, int hDiff, float s, float v, std::string skin, std::string trailSkin, int trailLength,
 float gravity, int cooldownMS, std::string canSplit):
     x(x), y(y), intX(std::round(x)), intY(std::round(y)), vx(vx), vy(vy), speed(speed), color({h, s ,v}), hDiff(hDiff),
@@ -41,9 +40,6 @@ void Rocket::updateTrail(){
         trail.erase(trail.begin());
 
     }
-
-
-
 }
 
 void Rocket::split(std::vector<Rocket>& rockets, int splitNumber, int splitDiff, int width, int height, float nhDiff
@@ -53,7 +49,6 @@ void Rocket::split(std::vector<Rocket>& rockets, int splitNumber, int splitDiff,
     //remove current rocket
     isOut = true;
       
-
     int n = splitNumber  + std::round(randint(-splitDiff,splitDiff));
 
     int nx = x;
@@ -64,15 +59,12 @@ void Rocket::split(std::vector<Rocket>& rockets, int splitNumber, int splitDiff,
     if(randint(0, 100) <= doubleSplitChance * 100 && canSplit != "yes but only once"){
         ncanSplit = "yes but only once";
     }
-
-
     for (int i = 0; i < n; i++){
         int midx = width / 2;
 
         float angle = randint(0, 2 * M_PI);
         float nvx = cos(angle);
         float nvy = sin(angle);
-
 
         int h = (((int)randint(baseH - nhDiff, baseH + nhDiff) % 360 + 360) % 360);
 

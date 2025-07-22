@@ -156,7 +156,6 @@ int main() {
         previousTime = nowTime;
 
         std::cout << "\033[H\033[J";  // clear
-        std::cout <<  height;
         getWindowSize(width,height,screen, bg);
         speed = baseSpeed * frameRate * height / 24; //update speed if the screen height has changed
 

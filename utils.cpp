@@ -1,11 +1,11 @@
 #include "utils.h"
-#include <iostream>
+//#include <iostream>
 #include <random>
 #include <string>
 
 bool isSkin(std::string text, std::string skin, std::string splitSkin) {
-    //say if text like "\033[38;2;255;0;0m@\033[0m" contains skin
-    if(text.size() == 1){
+    //say if a text like "\033[38;2;255;0;0m@\033[0m" contains skin ok splitSkin
+    if(text.size() == 1){ // for all the background characters
         return false;
     }
     for (int i = text.size() - 1; i >= 0; --i) {
@@ -19,6 +19,7 @@ bool isSkin(std::string text, std::string skin, std::string splitSkin) {
 }
 
 std::tuple<int, int, int> hsvToRgb(float h, float s, float v) {
+    // I didn't wright this function
     float c = v * s;
     float x = c * (1 - std::fabs(std::fmod(h / 60.0, 2) - 1));
     float m = v - c;
@@ -40,13 +41,15 @@ std::tuple<int, int, int> hsvToRgb(float h, float s, float v) {
 }
 
 float randint(float a, float b){
+    //randint returns float, I don't care, it just sounds nice.
     static std::random_device rd;
-    static std::mt19937 gen(rd());  // 🔒 Initialisé une seule fois
+    static std::mt19937 gen(rd());
     std::uniform_real_distribution<> dist(a, b);
     return dist(gen);
 }
 
 
 int sign(double x) {
+    //returns 1 if positive, -1 if negative
     return (x > 0) - (x < 0);
 }

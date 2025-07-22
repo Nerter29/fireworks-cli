@@ -1,6 +1,5 @@
 #include <algorithm>
-#include <cmath>
-#include <iostream>
+//#include <iostream>
 #include <string>
 #include <vector>
 
@@ -45,21 +44,12 @@ std::string getColor(bool isTrailUnit, int index, int maxIndex, std::tuple<float
 
 }
 
-std::string getAsciiChar(int index, int maxIndex){
-    //get the ascii character corresponding to the ratio of index / maxIndex, on the ascii gradient
-    std::vector<std::string> gradient = {";", ":", "-","~", "+", "*", "^"};
-
-    int n = gradient.size() - 1;
-    int gradientIndex = std::round(((float)index /maxIndex) * n);
-    return gradient[gradientIndex];
-}
 
 void generateScreen(std::vector<std::vector<std::string>>& screen, std::vector<Rocket>& rockets, int frameDelayMS,
 int splitNumber,int splitDiff, float hDiff, float s, float v, std::string skin, float splitSpeed, std::string splitSkin, std::string splitTrailSkin ,
 int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownAverageDiff, int splitCooldownDiff, float doubleSplitChance) {
     //create the content on the screen based on the current position of every elements
     //this is the main function where we update everything.
-
 
     int width = screen[0].size();
     int height = screen.size();
@@ -76,13 +66,12 @@ int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownAv
             r.skin = " ";
         }
 
-        int trailLength = r.trail.size() - 1; // variable trail lenth (if the rocket is out of bouds, its trail shrinks gradualy so the length is not constant)
+        int trailLength = r.trail.size() - 1; // variable trail length (if the rocket is out of bouds, its trail shrinks gradualy, so the length is not constant)
 
         for (int j = trailLength; j > 0 ; j--){ // j = index of the trailUnits
             std::vector<int> trailUnit = r.trail[j]; // trailUnit = {x, y}
             int x = trailUnit[0];
             int y = trailUnit[1];
-            //std::cout << isSkin(screen[y][x], skin);
             if(x < width && y < height){
                 if (!isSkin(screen[y][x], skin, splitSkin)){ // so the heads are always over the trails
                     //display trail
@@ -106,11 +95,9 @@ int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownAv
         r.updateTrail();
 
         r.timer += frameDelayMS;
-
         
         if(r.timer >= r.cooldownMS && !r.isOut){
-           //std::cout << rockets.size() << " " << std::get<0>(r.color) << " &\n";
-            if(r.canSplit == "yes" || r.canSplit == "yes but only once"){
+            if(r.canSplit == "yes" || r.canSplit == "yes but only once"){ // yes but only once is used when there is a double split : you can split but only one more time
                 r.timer = 0;
                 int splitCooldownAverage = randint(splitCooldown - splitCooldownAverageDiff, splitCooldown + splitCooldownAverageDiff); // to have small fireworks and big fireworks
                 r.split(rockets, splitNumber, splitDiff, width, height, hDiff, s, v, splitSpeed, splitSkin,
@@ -120,7 +107,6 @@ int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownAv
                 r.isOut = true;
             }
         }  
-        //std::cout << rockets.size() << " "; 
     }
 
     std::sort(rocketsToErase.begin(), rocketsToErase.end(), std::greater<int>()); // so there's no index error
