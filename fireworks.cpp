@@ -26,8 +26,8 @@ void spawnRocket(std::vector<Rocket>& rockets, int x, int y, float vx, float vy,
 
 std::string getColor(bool isTrailUnit, int index, int maxIndex, std::tuple<float, float, float> color, std::string trailSkin){
     //get the colored string corresponding to the ratio of index / maxIndex, on a color gradient
-    float lunimosityDiff = 0.3;
-    int hueDiff = 2;
+    float lunimosityDiff = 0.2;
+    int hueDiff = 3;
 
     float h = std::get<0>(color);
     float s = std::get<1>(color);
@@ -60,7 +60,7 @@ int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownAv
     //create the content on the screen based on the current position of every elements
     //this is the main function where we update everything.
 
-    
+
     int width = screen[0].size();
     int height = screen.size();
 

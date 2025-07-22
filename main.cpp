@@ -98,14 +98,13 @@ int main() {
     getWindowSize(width,height,screen, bg);
     std::vector<Rocket> rockets;
 
+    float frameRate = 1; //decrease it to increase the frames (1 = 20 fps, 2 = 10 fps etc.)
 
-    int rocketNumber = 3;
+
     int trailLength = 50;
 
-    int splitNumber = 30;
-    int splitDiff = 2;
-
-    float frameRate = 1.5; //decrease it to increase the frames (1 = 20 fps) (you may need to adjust the spawn cooldown)
+    int splitNumber = 30; // number of flares from each fireworks
+    int splitDiff = 10;
 
     float baseSpeed = 0.6;
     float speed;
@@ -115,19 +114,19 @@ int main() {
     int startH = 0; // spectrum of hue
     int endH = 360; // 
     int hDiff = 30; // Difference of hue in one firework
-    float s = 0.75;
-    float v = 0.75;
+    float s = 0.75; // luminosity
+    float v = 0.75; // darkness
 
     using namespace std::chrono_literals;
     auto delay = (50 * frameRate) * 1ms;
     int delayInt = static_cast<int>(delay.count());
-    int cooldownMS = 2000;
+    int cooldownMS = 2000; // cooldown until the fireworks explodes
     int cooldownDiff = 1000;
 
     std::string skin = "@";
     std::string trailSkin = "*";
 
-
+    //splits are the flares that come frome the explosion of a firework
     float splitSpeed = 0.4 * frameRate;
     std::string splitSkin = "#";
     std::string splitTrailSkin = "+";
@@ -157,7 +156,7 @@ int main() {
         previousTime = nowTime;
 
         std::cout << "\033[H\033[J";  // clear
-
+        std::cout <<  height;
         getWindowSize(width,height,screen, bg);
         speed = baseSpeed * frameRate * height / 24; //update speed if the screen height has changed
 
@@ -171,6 +170,9 @@ int main() {
             spawnCooldown = randint(baseSpawnCooldown - spawnCooldownDiff, baseSpawnCooldown + spawnCooldownDiff);
             spawnFirework(rockets,width, height, speed, startH, endH,hDiff, s, v, skin, trailSkin ,trailLength, gravity, cooldownMS,
             cooldownDiff);
+            if (height > 40){
+                spawnCooldown = spawnCooldown * 40 / height;
+            }
         }
 
         generateScreen(screen, rockets, delayInt, splitNumber, splitDiff,
