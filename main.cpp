@@ -55,10 +55,12 @@ void resetScreen(std::vector<std::vector<std::string>>& screen, std::string bg) 
 }
 
 
-void displayScreen(const std::vector<std::vector<std::string>>& screen) {
+void displayScreen(const std::vector<std::vector<std::string>>& screen, int width, int height) {
     for (int y = 0; y < screen.size(); y++) {
         for (int x = 0; x < screen[0].size(); x++) {
-            std::cout << screen[y][x] << " ";
+            if(x < width && y < height){
+                std::cout << screen[y][x] << " ";
+            }
         }
         std::cout << "\n";
     }
@@ -175,7 +177,7 @@ int main() {
         hDiff, s, v, skin, splitSpeed, splitSkin, splitTrailSkin, splitTrailLength, splitGravity, splitCooldownMS, splitCooldownDiff,
         doubleSplitChance);
 
-        displayScreen(screen);
+        displayScreen(screen, width, height);
 
         //see the time that all the shit above took to substract it from the current delay so we always wait the right amount of time beetween every frames
         float executionTime = std::chrono::duration<float, std::milli> (high_resolution_clock::now() - previousTime).count();

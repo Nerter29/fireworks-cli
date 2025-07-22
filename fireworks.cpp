@@ -83,11 +83,12 @@ int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownDi
             int x = trailUnit[0];
             int y = trailUnit[1];
             //std::cout << isSkin(screen[y][x], skin);
-            if (!isSkin(screen[y][x], skin, splitSkin)){ // so the heads are always over the trails
-                //display trail
-                screen[y][x] = getColor(true, j, r.trailLength - 1, r.color, r.trailSkin); // we take the initial traiLength so we keep a coherant trail when the roket is out of bounds
+            if(x < width && y < height){
+                if (!isSkin(screen[y][x], skin, splitSkin)){ // so the heads are always over the trails
+                    //display trail
+                    screen[y][x] = getColor(true, j, r.trailLength - 1, r.color, r.trailSkin); // we take the initial traiLength so we keep a coherant trail when the roket is out of bounds
+                }
             }
-
         }
 
         if(r.intX >= 0 && r.intX < width && r.intY >= 0 && r.intY < height){ // if the rocket is in bounds
