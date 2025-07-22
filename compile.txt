@@ -1,0 +1,8 @@
+
+cd 0-documents/0-perso/0-projets-executables/cpp/fireworks
+
+linux :
+g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -o fireworks -std=c++17 && ./fireworks
+
+windows:
+x86_64-w64-mingw32-g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -static -static-libgcc -static-libstdc++ -o fireworks.exe -std=c++17

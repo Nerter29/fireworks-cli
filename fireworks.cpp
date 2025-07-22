@@ -56,11 +56,11 @@ std::string getAsciiChar(int index, int maxIndex){
 
 void generateScreen(std::vector<std::vector<std::string>>& screen, std::vector<Rocket>& rockets, int frameDelayMS,
 int splitNumber,int splitDiff, float hDiff, float s, float v, std::string skin, float splitSpeed, std::string splitSkin, std::string splitTrailSkin ,
-int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownDiff, float doubleSplitChance) {
-
-
+int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownAverageDiff, int splitCooldownDiff, float doubleSplitChance) {
     //create the content on the screen based on the current position of every elements
     //this is the main function where we update everything.
+
+    
     int width = screen[0].size();
     int height = screen.size();
 
@@ -112,8 +112,9 @@ int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownDi
            //std::cout << rockets.size() << " " << std::get<0>(r.color) << " &\n";
             if(r.canSplit == "yes" || r.canSplit == "yes but only once"){
                 r.timer = 0;
+                int splitCooldownAverage = randint(splitCooldown - splitCooldownAverageDiff, splitCooldown + splitCooldownAverageDiff); // to have small fireworks and big fireworks
                 r.split(rockets, splitNumber, splitDiff, width, height, hDiff, s, v, splitSpeed, splitSkin,
-                splitTrailSkin ,splitTrailLength, splitGravity, splitCooldown, splitCooldownDiff, doubleSplitChance);
+                splitTrailSkin ,splitTrailLength, splitGravity, splitCooldownAverage, splitCooldownDiff, doubleSplitChance);
             }
             else{
                 r.isOut = true;

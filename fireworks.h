@@ -15,7 +15,7 @@ std::string getAsciiChar(int index, int maxIndex);
 
 void generateScreen(std::vector<std::vector<std::string>>& screen, std::vector<Rocket>& rockets, int frameDelayMS,
 int splitNumber,int splitDiff, float hDiff, float s, float v, std::string skin, float splitSpeed, std::string splitSkin, std::string splitTrailSkin ,
-int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownDiff, float doubleSplitChance);
+int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownAverageDiff, int splitCooldownDiff, float doubleSplitChance);
 
 
 #endif

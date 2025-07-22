@@ -21,11 +21,6 @@
 #include "fireworks.h"
 #include "utils.h"
 #include <chrono>
-/*
-cd 0-documents/0-perso/0-projets-executables/cpp/fireworks
-g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -o fireworks -std=c++17 && ./fireworks
-*/
-//x86_64-w64-mingw32-g++ main.cpp rocket.cpp utils.cpp fireworks.cpp -static -static-libgcc -static-libstdc++ -o fireworks.exe -std=c++17
 
 void getWindowSize(int& width, int& height, std::vector<std::vector<std::string>>& screen, std::string bg){
    #ifdef _WIN32//windows
@@ -40,8 +35,8 @@ void getWindowSize(int& width, int& height, std::vector<std::vector<std::string>
     #else//linux
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    width = w.ws_col / 2;
-    height = w.ws_row - 1;
+    width = w.ws_col / 2; // / 2 because I put spaces beetween every points
+    height = w.ws_row - 1; // -1 because there is one extra row
     #endif
 
     screen = std::vector<std::vector<std::string>>(height, std::vector<std::string>(width, bg));
@@ -112,13 +107,14 @@ int main() {
 
     float frameRate = 1.5; //decrease it to increase the frames (1 = 20 fps) (you may need to adjust the spawn cooldown)
 
-    float speed = 0.6 * frameRate * height / 24;
+    float baseSpeed = 0.6;
+    float speed;
     float gravity = 0.02 * frameRate;
 
     //colors
-    int startH = 0;
-    int endH = 360;
-    int hDiff = 30;
+    int startH = 0; // spectrum of hue
+    int endH = 360; // 
+    int hDiff = 30; // Difference of hue in one firework
     float s = 0.75;
     float v = 0.75;
 
@@ -136,22 +132,24 @@ int main() {
     std::string splitSkin = "#";
     std::string splitTrailSkin = "+";
     int splitTrailLength = 16;
-    float splitGravity = 0.04 * frameRate;
-    int splitCooldownMS = 1500;
-    int splitCooldownDiff = 1000;
+    float splitGravity = 0.06 * frameRate;
+    int splitCooldownMS = 1250;
+    int splitCooldownAverageDiff = 750;
+    int splitCooldownDiff = 500;
 
     float doubleSplitChance = 0.05;
 
 
-    int baseSpawnCooldown = 1250;
+    int baseSpawnCooldown = 1000;
     int spawnCooldown = baseSpawnCooldown;
-    int spawnCooldownDiff = 250;
+    int spawnCooldownDiff = 400;
     int spawnTimer = baseSpawnCooldown;
 
     using namespace std::chrono;
     auto previousTime = high_resolution_clock::now();
     auto nowTime = high_resolution_clock::now();
     std::chrono::duration<float, std::milli>  remaining = 50ms;
+
     while (true) {
         //make a realistic state of how much time has elapsed since last time to correctrly add it to spawnTimer
         nowTime = high_resolution_clock::now();
@@ -159,12 +157,14 @@ int main() {
         previousTime = nowTime;
 
         std::cout << "\033[H\033[J";  // clear
-        //std::cout << static_cast<int>(remaining.count()) << " " << elapsedTime<< "    ";
 
         getWindowSize(width,height,screen, bg);
+        speed = baseSpeed * frameRate * height / 24; //update speed if the screen height has changed
 
         resetScreen(screen, bg);
 
+        //I'm tired of puting everything in functions because of the number of parameter
+        //We 'll call that one manageSpawn(...)
         spawnTimer += elapsedTime;
         if(spawnTimer >= spawnCooldown){
             spawnTimer = 0;
@@ -174,7 +174,7 @@ int main() {
         }
 
         generateScreen(screen, rockets, delayInt, splitNumber, splitDiff,
-        hDiff, s, v, skin, splitSpeed, splitSkin, splitTrailSkin, splitTrailLength, splitGravity, splitCooldownMS, splitCooldownDiff,
+        hDiff, s, v, skin, splitSpeed, splitSkin, splitTrailSkin, splitTrailLength, splitGravity, splitCooldownMS, splitCooldownAverageDiff, splitCooldownDiff,
         doubleSplitChance);
 
         displayScreen(screen, width, height);
@@ -184,9 +184,7 @@ int main() {
         remaining = delay - milliseconds((int)executionTime);
         if (remaining > milliseconds(0))
             std::this_thread::sleep_for(remaining);
-        
     }
-
     return 0;
 }
 
