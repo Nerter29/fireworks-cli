@@ -13,7 +13,7 @@ void spawnRocket(std::vector<Rocket>& rockets, int x, int y, float vx, float vy,
 std::string getColor(bool isTrailUnit, int index, int maxIndex, std::tuple<float, float, float> color, std::string trailSkin);
 
 void generateScreen(std::vector<std::vector<std::string>>& screen, std::vector<Rocket>& rockets, int frameDelayMS,
-int splitNumber,int splitDiff, float hDiff, float s, float v, std::string skin, float splitSpeed, std::string splitSkin, std::string splitTrailSkin ,
+int splitNumber,int splitDiff, float hDiff, float s, float v, std::string skin, float splitSpeed, float splitSpeedDiff, std::string splitSkin, std::string splitTrailSkin ,
 int splitTrailLength, float splitGravity, int splitCooldown, int splitCooldownAverageDiff, int splitCooldownDiff, float doubleSplitChance);
 
 

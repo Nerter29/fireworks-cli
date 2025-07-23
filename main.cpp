@@ -103,8 +103,8 @@ int main() {
 
     int trailLength = 50;
 
-    int splitNumber = 30; // number of flares from each fireworks
-    int splitDiff = 10;
+    int splitNumber = 22; // number of flares from each fireworks
+    int splitDiff = 5;
 
     float baseSpeed = 0.6;
     float speed;
@@ -114,8 +114,8 @@ int main() {
     int startH = 0; // spectrum of hue
     int endH = 360; // 
     int hDiff = 30; // Difference of hue in one firework
-    float s = 0.75; // luminosity
-    float v = 0.75; // darkness
+    float s = 0.85; // Saturation
+    float v = 1; // Value
 
     using namespace std::chrono_literals;
     auto delay = (50 * frameRate) * 1ms;
@@ -127,13 +127,15 @@ int main() {
     std::string trailSkin = "*";
 
     //splits are the flares that come frome the explosion of a firework
-    float splitSpeed = 0.4 * frameRate;
+    float splitSpeed = 0.5 * frameRate;
+    float splitSpeedDiff = 0.1;
+
     std::string splitSkin = "#";
     std::string splitTrailSkin = "+";
     int splitTrailLength = 16;
     float splitGravity = 0.06 * frameRate;
-    int splitCooldownMS = 1250;
-    int splitCooldownAverageDiff = 750;
+    int splitCooldownMS = 1000;
+    int splitCooldownAverageDiff = 500;
     int splitCooldownDiff = 500;
 
     float doubleSplitChance = 0.05;
@@ -175,7 +177,7 @@ int main() {
         }
 
         generateScreen(screen, rockets, delayInt, splitNumber, splitDiff,
-        hDiff, s, v, skin, splitSpeed, splitSkin, splitTrailSkin, splitTrailLength, splitGravity, splitCooldownMS, splitCooldownAverageDiff, splitCooldownDiff,
+        hDiff, s, v, skin, splitSpeed, splitSpeedDiff, splitSkin, splitTrailSkin, splitTrailLength, splitGravity, splitCooldownMS, splitCooldownAverageDiff, splitCooldownDiff,
         doubleSplitChance);
 
         displayScreen(screen, width, height);
