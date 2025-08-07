@@ -3,8 +3,8 @@ This project is a simulation of fireworks right in your terminal. You can put it
 # Installation:
 ### Linux
 ```
-git clone https://gitlab.com/Nerter/fireworks.git  
-cd fireworks  
+git clone https://github.com/Nerter29/fireworks-cli.git    
+cd fireworks-cli    
 chmod +x fireworks  
 ./fireworks  
 ```
@@ -18,7 +18,7 @@ double click on fireworks.exe
 
 open your terminal and type :  
 ```
-git clone https://gitlab.com/Nerter/fireworks.git  
-cd fireworks  
+git clone https://github.com/Nerter29/fireworks-cli.git  
+cd fireworks-cli  
 ./fireworks.exe  
 ```
